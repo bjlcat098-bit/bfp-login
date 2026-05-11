@@ -7,6 +7,7 @@ import "./Dashboard.css";
 const ROSTER_STORAGE_KEY = "bfp_roster_v1";
 const DESIGNATION_LIBRARY_STORAGE_KEY = "bfp_roster_designation_library_v1";
 const ROSTER_EDIT_TARGET_KEY = "bfp_roster_edit_target";
+const ROSTER_DELETED_STORAGE_KEY = "bfp_roster_deleted_v1";
 
 const UNIT_ASSIGNMENT_ORDER = [
   "OPFM - PAMPANGA",
@@ -303,6 +304,23 @@ const saveRoster = (list) => {
   localStorage.setItem(ROSTER_STORAGE_KEY, JSON.stringify(list));
 };
 
+	const loadDeletedRoster = () => {
+	  try {
+		const raw = localStorage.getItem(ROSTER_DELETED_STORAGE_KEY);
+		return raw ? JSON.parse(raw) : [];
+	  } catch {
+		return [];
+	  }
+	};
+
+	const saveDeletedRoster = (list) => {
+	  localStorage.setItem(
+		ROSTER_DELETED_STORAGE_KEY,
+		JSON.stringify(list)
+	  );
+	};
+
+
 // sorting helpers
 const RANK_ORDER = [
   "FSSUPT",
@@ -380,6 +398,7 @@ const sortForExport = (arr, mode) => {
 
 export default function ROSTER() {
   const [personnel, setPersonnel] = useState(loadRoster);
+  const [deletedPersonnel, setDeletedPersonnel] = useState(loadDeletedRoster);
   const [form, setForm] = useState(emptyForm);
   const [designations, setDesignations] = useState([emptyDesignation()]);
   const [designationLibrary, setDesignationLibrary] = useState(loadDesignationLibrary);
@@ -402,6 +421,10 @@ export default function ROSTER() {
   useEffect(() => {
     saveRoster(personnel);
   }, [personnel]);
+  
+  useEffect(() => {
+  saveDeletedRoster(deletedPersonnel);
+  }, [deletedPersonnel]);
 
   useEffect(() => {
     saveDesignationLibrary(designationLibrary);
@@ -677,12 +700,34 @@ export default function ROSTER() {
     clearForm();
   };
 
-  const handleDeletePerson = (id) => {
-    if (!window.confirm("Remove this personnel from roster?")) return;
-    setPersonnel((prev) => prev.filter((p) => p.id !== id));
-    if (editingId === id) clearForm();
-  };
+	const handleDeletePerson = (id) => {
+	  if (!window.confirm("Remove this personnel from roster?")) return;
 
+	  const personToDelete = personnel.find((p) => p.id === id);
+	  if (!personToDelete) return;
+
+	  // ✅ Avoid duplicates
+	  setDeletedPersonnel((prevDeleted) => {
+		const alreadyExists = prevDeleted.some(
+		  (p) => p.id === personToDelete.id
+		);
+
+		if (alreadyExists) return prevDeleted;
+
+		return [
+		  ...prevDeleted,
+		  {
+			...personToDelete,
+			deletedAt: new Date().toISOString(),
+		  },
+		];
+	  });
+
+	  // ✅ Remove from active roster
+	  setPersonnel((prev) => prev.filter((p) => p.id !== id));
+
+	  if (editingId === id) clearForm();
+	};
   const clearAllRosterData = () => {
     if (!window.confirm("This will DELETE ALL roster data. Continue?")) return;
 
@@ -1141,6 +1186,65 @@ export default function ROSTER() {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Roster");
       XLSX.utils.book_append_sheet(wb, wsRecap, "Recapitulation");
+		// ✅ Recently Deleted Sheet (Combined Designations)
+	if (deletedPersonnel.length) {
+	  const deletedHeader = [
+		"RANK",
+		"LAST NAME",
+		"FIRST NAME",
+		"MIDDLE NAME",
+		"ITEM NO",
+		"ACCNT NO",
+		"UNIT CODE",
+		"UNIT ASSIGNMENT",
+		"DESIGNATION(S)",
+		"AUTHORITY(S)",
+		"GENDER",
+		"STATUS",
+		"REMARKS",
+		"DELETED DATE",
+	  ];
+
+	  const deletedData = [deletedHeader];
+
+	  deletedPersonnel.forEach((p) => {
+		const designations = Array.isArray(p.designations)
+		  ? p.designations
+		  : [];
+
+		// ✅ Combine Designations
+		const combinedDesignations = designations
+		  .map((d) => d.designation)
+		  .filter(Boolean)
+		  .join(" / ");
+
+		// ✅ Combine Authorities
+		const combinedAuthorities = designations
+		  .map((d) => d.authority)
+		  .filter(Boolean)
+		  .join(" / ");
+
+		deletedData.push([
+		  p.rank || "",
+		  p.lastName || "",
+		  p.firstName || "",
+		  p.middleName || "",
+		  p.itemNo || "",
+		  p.accntNo || "",
+		  p.unitCode || "",
+		  p.unitAssignment || "",
+		  combinedDesignations,
+		  combinedAuthorities,
+		  p.gender || "",
+		  p.status || "",
+		  p.remarks || "",
+		  formatDateForExcel(p.deletedAt),
+		]);
+	  });
+
+	  const wsDeleted = XLSX.utils.aoa_to_sheet(deletedData);
+	  XLSX.utils.book_append_sheet(wb, wsDeleted, "Recently Deleted");
+	}
 
       XLSX.writeFile(wb, "BFP_Roster.xlsx");
     } catch (err) {
