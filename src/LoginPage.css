@@ -1,0 +1,195 @@
+/* Fullscreen dark background */
+.login-root {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light rays canvas overlay */
+.login-rays {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Centered shell for the card */
+.login-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+  width: 100%;
+}
+
+/* Main glassy card */
+.login-card {
+  border-radius: 1.6rem;
+  padding: 2.4rem 2.1rem 2rem;
+  background: radial-gradient(circle at top, #0b1120, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  box-shadow:
+    0 30px 60px rgba(15, 23, 42, 0.95),
+    0 0 0 1px rgba(15, 23, 42, 1);
+}
+
+/* Badge logo + halo */
+.login-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+  padding: 18px;
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(circle at center, rgba(249, 115, 22, 0.4), transparent 65%);
+}
+
+.login-logo {
+  width: 200px;
+  max-width: 200px;
+  height: auto;
+  display: block;
+}
+
+/* Titles */
+.login-title {
+  text-align: center;
+  font-size: 1.3rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 0.25rem;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #cbd5f5;
+  margin: 0 0 1.3rem;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.login-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+/* Input row with icon + text box */
+.login-input-row {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+  overflow: hidden;
+}
+
+.login-input-icon {
+  padding-left: 0.8rem;
+  padding-right: 0.35rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.login-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.8rem 0.55rem 0.4rem;
+}
+
+.login-input::placeholder {
+  color: rgba(148, 163, 184, 0.8);
+}
+
+/* Eye button */
+.login-eye-btn {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  padding: 0 0.7rem 0 0.35rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Error message */
+.login-error {
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: #fecaca;
+}
+
+/* Primary sign in button */
+.login-btn {
+  margin-top: 0.4rem;
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 158, 11, 0.8);
+  background: linear-gradient(90deg, #fb923c, #ef4444);
+  color: #f9fafb;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow:
+    0 16px 40px rgba(248, 113, 113, 0.75),
+    0 0 0 1px rgba(127, 29, 29, 0.95);
+}
+
+.login-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.login-btn-icon {
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.8rem 1.4rem 1.6rem;
+  }
+
+  .login-logo {
+    width: 170px;
+    max-width: 170px;
+  }
+}
+
+
+/* LightRays component className used in JSX */
+.light-rays{
+  position: absolute;
+  inset: 0;
+  opacity: 0.65;
+  pointer-events: none;
+}
