@@ -14,7 +14,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Bacolor FS, Pampanga",
   "Candaba FS, Pampanga",
   "Floridablanca FS, Pampanga",
-  "Guagua Fire Station",
+  "Guagua FS, Pampanga",
   "Lubao FS, Pampanga",
   "Mabalacat City FS, Pampanga",
   "Macabebe FS, Pampanga",
@@ -29,7 +29,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Sasmuan FS, Pampanga",
   "Sta Ana FS, Pampanga",
   "Sta Rita FS, Pampanga",
-  "Sto. Tomas Fire Station",
+  "Sto Tomas FS, Pampanga",
 ];
 
 const UNIT_CODE_MAP = {
@@ -40,7 +40,7 @@ const UNIT_CODE_MAP = {
   "30504": "Bacolor FS, Pampanga",
   "30505": "Candaba FS, Pampanga",
   "30506": "Floridablanca FS, Pampanga",
-  "30507": "Guagua Fire Station",
+  "30507": "Guagua FS, Pampanga",
   "30508": "Lubao FS, Pampanga",
   "30509": "Mabalacat City FS, Pampanga",
   "30510": "Macabebe FS, Pampanga",
@@ -55,7 +55,7 @@ const UNIT_CODE_MAP = {
   "30519": "Sasmuan FS, Pampanga",
   "30520": "Sta Ana FS, Pampanga",
   "30521": "Sta Rita FS, Pampanga",
-  "30522": "Sto. Tomas Fire Station",
+  "30522": "Sto Tomas FS, Pampanga",
 };
 
 const UNIT_ASSIGNMENT_TO_CODE = Object.fromEntries(

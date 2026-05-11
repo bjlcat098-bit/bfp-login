@@ -16,7 +16,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Bacolor FS, Pampanga",
   "Candaba FS, Pampanga",
   "Floridablanca FS, Pampanga",
-  "Guagua Fire Station",
+  "Guagua FS, Pampanga",
   "Lubao FS, Pampanga",
   "Mabalacat City FS, Pampanga",
   "Macabebe FS, Pampanga",
@@ -31,7 +31,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Sasmuan FS, Pampanga",
   "Sta Ana FS, Pampanga",
   "Sta Rita FS, Pampanga",
-  "Sto. Tomas Fire Station",
+  "Sto Tomas FS, Pampanga",
 ];
 
 const UNIT_CODE_MAP = {
@@ -42,7 +42,7 @@ const UNIT_CODE_MAP = {
   "30504": "Bacolor FS, Pampanga",
   "30505": "Candaba FS, Pampanga",
   "30506": "Floridablanca FS, Pampanga",
-  "30507": "Guagua Fire Station",
+  "30507": "Guagua FS, Pampanga",
   "30508": "Lubao FS, Pampanga",
   "30509": "Mabalacat City FS, Pampanga",
   "30510": "Macabebe FS, Pampanga",
@@ -57,7 +57,7 @@ const UNIT_CODE_MAP = {
   "30519": "Sasmuan FS, Pampanga",
   "30520": "Sta Ana FS, Pampanga",
   "30521": "Sta Rita FS, Pampanga",
-  "30522": "Sto. Tomas Fire Station",
+  "30522": "Sto Tomas FS, Pampanga",
 };
 
 const UNIT_ASSIGNMENT_TO_CODE = Object.fromEntries(
@@ -771,14 +771,21 @@ export default function ROSTER() {
 		  alignment: { horizontal: "center", vertical: "center", wrapText: true },
 		  border: thinBorder,
 		};
-
 		const bodyStyle = {
-		  alignment: { vertical: "top", wrapText: true },
+		  alignment: {
+			horizontal: "center",
+			vertical: "center",
+			wrapText: true,
+		  },
 		  border: thinBorder,
 		};
 
 		const centerStyle = {
-		  alignment: { horizontal: "center", vertical: "center", wrapText: true },
+		  alignment: {
+			horizontal: "center",
+			vertical: "center",
+			wrapText: true,
+		  },
 		  border: thinBorder,
 		};
 
@@ -824,27 +831,37 @@ export default function ROSTER() {
 
       // --- SHEET 1: ROSTER ---
       const header = [
-        "RANK",
-        "LAST NAME",
-        "FIRST NAME",
-        "MIDDLE NAME",
-        "ITEM NO",
-        "ACCNT NO",
-        "UNIT CODE",
-        "UNIT ASSIGNMENT",
-        "DESIGNATION",
-        "AUTHORITY",
-        "DATE OF ORDER",
-        "GENDER",
-        "STATUS",
-        "REMARKS",
-      ];
+		  "NO.",
+		  "RANK",
+		  "LAST NAME",
+		  "FIRST NAME",
+		  "MIDDLE NAME",
+		  "ITEM NO",
+		  "ACCNT NO",
+		  "UNIT CODE",
+		  "UNIT ASSIGNMENT",
+		  "DESIGNATION",
+		  "AUTHORITY",
+		  "DATE OF ORDER",
+		  "GENDER",
+		  "STATUS",
+		  "REMARKS",
+		];
 
-      const data = [header];
-      const merges = [];
-      let currentRow = 1;
+        const data = [header];
+		const merges = [];
+		let currentRow = 1;
+		let counter = 1;   // ✅ MOVE IT HERE
+		let previousUnit = null;
 
-      for (const p of sorted) {
+		for (const p of sorted) {
+			// ✅ Reset numbering per unit only when sorting by UNIT_ASSIGNMENT
+			if (modeToUse === "UNIT_ASSIGNMENT") {
+			  if (previousUnit !== p.unitAssignment) {
+				counter = 1;
+				previousUnit = p.unitAssignment;
+			  }
+			}
         const desigs =
           Array.isArray(p.designations) && p.designations.length
             ? p.designations
@@ -858,7 +875,8 @@ export default function ROSTER() {
 
         desigs.forEach((d, idx) => {
           data.push([
-            idx === 0 ? (p.rank || "") : "",
+			idx === 0 ? counter : "",
+			idx === 0 ? (p.rank || "") : "",
             idx === 0 ? (p.lastName || "") : "",
             idx === 0 ? (p.firstName || "") : "",
             idx === 0 ? (p.middleName || "") : "",
@@ -878,13 +896,14 @@ export default function ROSTER() {
         if (desigs.length > 1) {
           const start = currentRow;
           const end = currentRow + desigs.length - 1;
-          for (let c = 0; c <= 7; c++)
+          for (let c = 0; c <= 8; c++)
             merges.push({ s: { r: start, c }, e: { r: end, c } });
           for (let c = 11; c <= 13; c++)
             merges.push({ s: { r: start, c }, e: { r: end, c } });
         }
 
         currentRow += desigs.length;
+		counter++;
       }
 
       const ws = XLSX.utils.aoa_to_sheet(data);
@@ -915,25 +934,25 @@ export default function ROSTER() {
 		ws["!autofilter"] = { ref: ws["!ref"] };
 
 		// Set row height
-		ws["!rows"] = [{ hpt: 32 }, ...Array.from({ length: range.e.r }, () => ({ hpt: 22 }))];		
+		ws["!rows"] = [];		
 	  
-
-      const colIndex = {
-        rank: 0,
-        lastName: 1,
-        firstName: 2,
-        middleName: 3,
-        itemNo: 4,
-        accntNo: 5,
-        unitCode: 6,
-        unitAssignment: 7,
-        designation: 8,
-        authority: 9,
-        dateOfOrder: 10,
-        gender: 11,
-        status: 12,
-        remarks: 13,
-      };
+        const colIndex = {
+		  no: 0,
+		  rank: 1,
+		  lastName: 2,
+		  firstName: 3,
+		  middleName: 4,
+		  itemNo: 5,
+		  accntNo: 6,
+		  unitCode: 7,
+		  unitAssignment: 8,
+		  designation: 9,
+		  authority: 10,
+		  dateOfOrder: 11,
+		  gender: 12,
+		  status: 13,
+		  remarks: 14,
+		};
 
       let rowCursor = 1;
       for (const p of sorted) {
@@ -999,21 +1018,22 @@ export default function ROSTER() {
       }
 
       ws["!merges"] = merges;
-      ws["!cols"] = [
-        { wch: 8 },
-        { wch: 18 },
-        { wch: 18 },
-        { wch: 10 },
-        { wch: 12 },
-        { wch: 10 },
-        { wch: 28 },
-        { wch: 30 },
-        { wch: 22 },
-        { wch: 14 },
-        { wch: 10 },
-        { wch: 14 },
-        { wch: 25 },
-      ];
+		ws["!cols"] = [
+		  { wch: 10 },  // Rank
+		  { wch: 22 },  // Last Name
+		  { wch: 22 },  // First Name
+		  { wch: 18 },  // Middle
+		  { wch: 14 },  // Item No
+		  { wch: 16 },  // Accnt No
+		  { wch: 14 },  // Unit Code
+		  { wch: 30 },  // Unit Assignment
+		  { wch: 28 },  // Designation
+		  { wch: 20 },  // Authority
+		  { wch: 18 },  // Date
+		  { wch: 14 },  // Gender
+		  { wch: 16 },  // Status
+		  { wch: 28 },  // Remarks
+		];
 
       // --- SHEET 2: RECAPITULATION REPORT ---
       const isOnboarding = (p) => {

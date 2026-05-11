@@ -14,7 +14,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Bacolor FS, Pampanga",
   "Candaba FS, Pampanga",
   "Floridablanca FS, Pampanga",
-  "Guagua Fire Station",
+  "Guagua FS, Pampanga",
   "Lubao FS, Pampanga",
   "Mabalacat City FS, Pampanga",
   "Macabebe FS, Pampanga",
@@ -29,7 +29,7 @@ const UNIT_ASSIGNMENT_ORDER = [
   "Sasmuan FS, Pampanga",
   "Sta Ana FS, Pampanga",
   "Sta Rita FS, Pampanga",
-  "Sto. Tomas Fire Station",
+  "Sto Tomas FS, Pampanga",
 ];
 
 const RANK_ORDER = [
@@ -1306,7 +1306,7 @@ Lopez, Maria`}
                           "Bacolor FS, Pampanga": "30504",
                           "Candaba FS, Pampanga": "30505",
                           "Floridablanca FS, Pampanga": "30506",
-                          "Guagua Fire Station": "30507",
+                          "Guagua FS, Pampanga": "30507",
                           "Lubao FS, Pampanga": "30508",
                           "Mabalacat City FS, Pampanga": "30509",
                           "Macabebe FS, Pampanga": "30510",
@@ -1321,7 +1321,7 @@ Lopez, Maria`}
                           "Sasmuan FS, Pampanga": "30519",
                           "Sta Ana FS, Pampanga": "30520",
                           "Sta Rita FS, Pampanga": "30521",
-                          "Sto. Tomas Fire Station": "30522",
+                          "Sto Tomas FS, Pampanga": "30522",
                         };
                         handleProfileFieldChange("unitCode", unitCodeMap[unit] || "");
                       }}
