@@ -1080,15 +1080,40 @@ export default function ROSTER() {
 		  { wch: 28 },  // Remarks
 		];
 
+	console.table(
+	  sorted
+		.filter((p) => JSON.stringify(p).toLowerCase().includes("boarding"))
+		.map((p) => ({
+		  name: `${p.lastName}, ${p.firstName}`,
+		  unit: p.unitAssignment,
+		  gender: p.gender,
+		  remarks: p.remarks,
+		  designations: (p.designations || [])
+			.map((d) => d.designation)
+			.join(" / "),
+		}))
+	);
+
+
+
       // --- SHEET 2: RECAPITULATION REPORT ---
-      const isOnboarding = (p) => {
-        const ds = Array.isArray(p?.designations) ? p.designations : [];
-        const text = ds.map((d) => d?.designation || "").join(" ").toLowerCase();
-        return text.includes("onboard");
-      };
+    const isOnboarding = (p) => {
+	  const ds = Array.isArray(p?.designations) ? p.designations : [];
+
+	  const text = [
+		...ds.map((d) => d?.designation || ""),
+		p?.remarks || "",
+	  ]
+		.join(" ")
+		.replace(/[–—−]/g, "-")
+		.replace(/\s+/g, " ")
+		.trim();
+
+	  return /on\s*-?\s*boarding\s+program/i.test(text);
+	};
 
       const recapMap = new Map();
-      mergedPersonnel.forEach((p) => {
+      sorted.forEach((p) => {
         const unit = String(p.unitAssignment || "").trim() || "Unassigned";
         if (!recapMap.has(unit)) {
           recapMap.set(unit, { regMale: 0, regFemale: 0, opMale: 0, opFemale: 0 });
