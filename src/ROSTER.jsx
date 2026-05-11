@@ -67,6 +67,21 @@ const UNIT_ASSIGNMENT_TO_CODE = Object.fromEntries(
 const textValue = (value) =>
   value === null || value === undefined ? "" : String(value).trim();
 
+// ✅ Format ISO date (YYYY-MM-DD) to 9-Jan-2020
+	const formatDateForExcel = (value) => {
+	  if (!value) return "";
+
+	  const d = new Date(value);
+	  if (isNaN(d)) return "";
+
+	  const day = d.getDate();
+	  const month = d.toLocaleString("en-US", { month: "short" });
+	  const year = d.getFullYear();
+
+	  return `${day}-${month}-${year}`;
+	};
+
+
 const matchesRosterEditTarget = (person, target) => {
   if (!person || !target) return false;
 
@@ -582,7 +597,7 @@ export default function ROSTER() {
       .filter((d) => d.designation || d.authority || d.dateOfOrder)
       .map((d) => ({
         ...d,
-        dateOfOrder: d.dateOfOrder || "",
+        formatDateForExcel(d.dateOfOrder),
       }))
       .sort((a, b) => (a.dateOfOrder || "").localeCompare(b.dateOfOrder || ""));
 
