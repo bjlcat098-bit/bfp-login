@@ -68,18 +68,18 @@ const textValue = (value) =>
   value === null || value === undefined ? "" : String(value).trim();
 
 // ✅ Format ISO date (YYYY-MM-DD) to 9-Jan-2020
-	const formatDateForExcel = (value) => {
-	  if (!value) return "";
+const formatDateForExcel = (value) => {
+  if (!value) return "";
 
-	  const d = new Date(value);
-	  if (isNaN(d)) return "";
+  const d = new Date(value);
+  if (isNaN(d)) return "";
 
-	  const day = d.getDate();
-	  const month = d.toLocaleString("en-US", { month: "short" });
-	  const year = d.getFullYear();
+  const day = d.getDate();
+  const month = d.toLocaleString("en-US", { month: "short" });
+  const year = d.getFullYear();
 
-	  return `${day}-${month}-${year}`;
-	};
+  return `${day}-${month}-${year}`;
+};
 
 
 const matchesRosterEditTarget = (person, target) => {
@@ -597,7 +597,7 @@ export default function ROSTER() {
       .filter((d) => d.designation || d.authority || d.dateOfOrder)
       .map((d) => ({
         ...d,
-        formatDateForExcel(d.dateOfOrder),
+        dateOfOrder: d.dateOfOrder || "",
       }))
       .sort((a, b) => (a.dateOfOrder || "").localeCompare(b.dateOfOrder || ""));
 
@@ -868,7 +868,7 @@ export default function ROSTER() {
             idx === 0 ? (p.unitAssignment || "") : "",
             d.designation || "",
             d.authority || "",
-            d.dateOfOrder || "",
+            formatDateForExcel(d.dateOfOrder),
             idx === 0 ? (p.gender || "") : "",
             idx === 0 ? (p.status || "") : "",
             idx === 0 ? (p.remarks || "") : "",
